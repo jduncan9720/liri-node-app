@@ -1,2 +1,10 @@
-spotify-this-song, concert-this, movie-this
+spotify-this-song, 'Thriller'
 
+CLI:
+node liri.js concert-this DMB
+
+file Server:
+node liri.js do-what-it-says
+
+random.txt
+spotify-this-song, 'Thriller'
