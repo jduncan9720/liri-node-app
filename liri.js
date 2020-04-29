@@ -4,48 +4,29 @@ var fs = require("fs");
 var nodeArgs = process.argv;
 var input = process.argv[3];
 
-// function fileServer(){
-//   fs.readFile("random.txt", "utf8", function (err, data) {
-//     if (err) {
-//       return console.log(err);
-//     }
-//     data = data.split(", ");
-//     //input
-
-//     if (data === "spotify-this-song") {
-//       songInfo()
-//     } else if (data === "concert-this") {
-//       bandInfo()
-//     } else if (data === "movie-this") {
-//       movieInfo()
-//     }
-//     console.log(data)
-//   });
-// };
-
-// switch (nodeArgs[2]) {
-//   case 'spotify-this-song':
-//     if (input === undefined) {
-//       input = 'Crash';
-//     }
-//     songInfo(input);
-//     break;
-//   case 'concert-this':
-//     if (input === undefined) {
-//       input = 'DMB';
-//     }
-//     bandInfo(input);
-//     break;
-//   case 'movie-this':
-//     if (input === undefined) {
-//       input = 'Mr. Nobdy';
-//     }
-//     movieInfo(input);
-//     break;
-//   case 'do-what-it-says':
-//     fileServer();
-//     break;
-// }
+switch (nodeArgs[2]) {
+  case 'spotify-this-song':
+    if (input === undefined) {
+      input = 'Crash';
+    }
+    songInfo(input);
+    break;
+  case 'concert-this':
+    if (input === undefined) {
+      input = 'The Sign';
+    }
+    bandInfo(input);
+    break;
+  case 'movie-this':
+    if (input === undefined) {
+      input = 'Mr. Nobdy';
+    }
+    movieInfo(input);
+    break;
+  case 'do-what-it-says':
+    autoFill();
+    break;
+}
 
 function songInfo() {
 
@@ -54,8 +35,8 @@ function songInfo() {
   var spotify = new Spotify(keys.spotify);
   var songName = "";
 
-  for (var i = 2; i < nodeArgs.length; i++) {
-    if (i > 2 && i < nodeArgs.length) {
+  for (var i = 3; i < nodeArgs.length; i++) {
+    if (i > 3 && i < nodeArgs.length) {
       songName = songName + "+" + nodeArgs[i];
     } else {
       songName += nodeArgs[i];
@@ -76,8 +57,8 @@ function bandInfo() {
 
   var bandName = "";
 
-  for (var i = 2; i < nodeArgs.length; i++) {
-    if (i > 2 && i < nodeArgs.length) {
+  for (var i = 3; i < nodeArgs.length; i++) {
+    if (i > 3 && i < nodeArgs.length) {
       bandName = bandName + "+" + nodeArgs[i];
     } else {
       bandName += nodeArgs[i];
@@ -93,12 +74,12 @@ function bandInfo() {
     })
 };
 
-function movieInfo(){
+function movieInfo() {
 
   var movieName = "";
 
-  for (var i = 2; i < nodeArgs.length; i++) {
-    if (i > 2 && i < nodeArgs.length) {
+  for (var i = 3; i < nodeArgs.length; i++) {
+    if (i > 3 && i < nodeArgs.length) {
       movieName = movieName + "+" + nodeArgs[i];
     } else {
       movieName += nodeArgs[i];
@@ -119,3 +100,22 @@ function movieInfo(){
     })
 };
 
+function autoFill() {
+
+  fs.readFile("random.txt", "utf8", function (err, data) {
+    if (err) {
+      return console.log(err);
+    }
+    data = data.split(", ");
+    //input
+
+    if (data === "spotify-this-song") {
+      songInfo()
+    } else if (data === "concert-this") {
+      bandInfo()
+    } else if (data === "movie-this") {
+      movieInfo()
+    }
+    console.log(data)
+  });
+};
