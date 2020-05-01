@@ -1,6 +1,7 @@
 require("dotenv").config();
 var axios = require("axios");
 var fs = require("fs");
+var moment = require("moment");
 var nodeArgs = process.argv;
 var input = process.argv[3];
 
@@ -27,14 +28,11 @@ switch (nodeArgs[2]) {
     autoFill();
     break;
 }
-
 function songInfo() {
-
   var Spotify = require("node-spotify-api")
   var keys = require("./keys.js");
   var spotify = new Spotify(keys.spotify);
   var songName = "";
-
   for (var i = 3; i < nodeArgs.length; i++) {
     if (i > 3 && i < nodeArgs.length) {
       songName = songName + "+" + nodeArgs[i];
@@ -54,9 +52,8 @@ function songInfo() {
 };
 
 function bandInfo() {
-
   var bandName = "";
-
+  
   for (var i = 3; i < nodeArgs.length; i++) {
     if (i > 3 && i < nodeArgs.length) {
       bandName = bandName + "+" + nodeArgs[i];
@@ -65,19 +62,18 @@ function bandInfo() {
     }
   }
   var queryUrl = "https://rest.bandsintown.com/artists/" + bandName + "/events?app_id=trilogy"
-
   axios.get(queryUrl).then(
     function (response) {
+      var concertDate = response.data[0].datetime;
+      var dateFormat = "YYYY-MM-DDTH";
+      var convertedDate = moment(concertDate, dateFormat)
       console.log("Show Venue: " + response.data[0].venue.name);
       console.log("Venue Location: " + response.data[0].venue.location);
-      console.log("Show Date: " + response.data[0].datetime);
+      console.log("Show Date: " + convertedDate.format("MM/DD/YY"));
     })
 };
-
 function movieInfo() {
-
   var movieName = "";
-
   for (var i = 3; i < nodeArgs.length; i++) {
     if (i > 3 && i < nodeArgs.length) {
       movieName = movieName + "+" + nodeArgs[i];
@@ -86,7 +82,6 @@ function movieInfo() {
     }
   }
   var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&tomatoes&apikey=1465f66e"
-
   axios.get(queryUrl).then(
     function (response) {
       console.log("Movie Title: " + response.data.Title);
@@ -99,22 +94,23 @@ function movieInfo() {
       console.log("Actors/Actresses: " + response.data.Actors);
     })
 };
-
 function autoFill() {
-
   fs.readFile("random.txt", "utf8", function (err, data) {
     if (err) {
       return console.log(err);
     }
-    data = data.split(", ");
-    //input
-
+    data = data.split(",");
+    data = data[0];
+    console.log(data[1])
     if (data === "spotify-this-song") {
+      //We need to take the [1] info and pass it into songName variable.
       songInfo()
     } else if (data === "concert-this") {
       bandInfo()
     } else if (data === "movie-this") {
       movieInfo()
+    } else {
+      console.log("Nope")
     }
     console.log(data)
   });
